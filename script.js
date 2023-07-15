@@ -2,12 +2,16 @@ window.addEventListener('load', () => {
 	const form = document.querySelector("#new-task-form");
 	const input = document.querySelector("#new-task-input");
 	const list_el = document.querySelector("#tasks");
+	let tasks = [];
 
-	form.addEventListener('submit', (e) => {
-		e.preventDefault();
+	if (!JSON.parse(localStorage.getItem("tasks"))) {
+		localStorage.setItem("tasks", JSON.stringify(tasks));
+	}
 
-		const task = input.value;
+	var todoTasks = JSON.parse(localStorage.getItem("tasks"));
+	console.log(todoTasks);
 
+	const create = (task) => {
 		const task_el = document.createElement('div');
 		task_el.classList.add('task');
 
@@ -26,7 +30,7 @@ window.addEventListener('load', () => {
 
 		const task_actions_el = document.createElement('div');
 		task_actions_el.classList.add('actions');
-		
+
 		const task_edit_el = document.createElement('button');
 		task_edit_el.classList.add('edit');
 		task_edit_el.innerText = 'Edit';
@@ -58,5 +62,28 @@ window.addEventListener('load', () => {
 		task_delete_el.addEventListener('click', (e) => {
 			list_el.removeChild(task_el);
 		});
+	}
+
+	if (todoTasks) {
+		for(let i = 0; i<todoTasks.length; i++) {
+			let task = todoTasks[i];
+			console.log(task)
+			create(task)
+		}
+	}
+
+	form.addEventListener('submit', (e) => {
+		e.preventDefault();
+
+		const task = input.value;
+
+		var todoTasks = JSON.parse(localStorage.getItem("tasks"));
+		todoTasks.push(task)
+
+		console.log(todoTasks);
+
+		localStorage.setItem("tasks", JSON.stringify(todoTasks));
+
+		create(task);
 	});
 });
